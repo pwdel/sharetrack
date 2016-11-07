@@ -1,10 +1,7 @@
 /* -----------------------------------------------------------
-This example shows a lot of different features on the Particle Asset Tracker.
-
-As configured here it will check for a good GPS fix every 10 minutes and
-publish that data if data exists.
-
-If not, it will save you data by staying quiet. It also
+This example shows a lot of different features. As configured here
+it'll check for a good GPS fix every 10 minutes and publish that data
+if there is one. If not, it'll save you data by staying quiet. It also
 registers 3 Particle.functions for changing whether it publishes,
 reading the battery level, and manually requesting a GPS reading.
 ---------------------------------------------------------------*/
@@ -43,6 +40,8 @@ void setup() {
     // Opens up a Serial port so you can listen over USB
     Serial.begin(9600);
 
+    // Subscribe to the integration response event
+    Particle.subscribe("hook-response/gps-coordinates", myHandler, MY_DEVICES);
     // These three functions are useful for remote diagnostics. Read more below.
     Particle.function("tmode", transmitMode);
     Particle.function("batt", batteryStatus);
@@ -72,7 +71,7 @@ void loop() {
             // Only publish if we're in transmittingData mode 1;
             if(transmittingData){
                 // Short publish names save data!
-                Particle.publish("G", t.readLatLon(), 60, PRIVATE);
+                Particle.publish("gps-coordinates", t.readLatLon(), 60, PRIVATE);
             }
             // but always report the data over serial for local development
             Serial.println(t.readLatLon());
@@ -101,6 +100,11 @@ int gpsPublish(String command){
     else { return 0; }
 }
 
+
+void myHandler(const char *event, const char *data) {
+  // Handle the integration response
+}
+
 // Lets you remotely check the battery status by calling the function "batt"
 // Triggers a publish with the info (so subscribe or watch the dashboard)
 // and also returns a '1' if there's >10% battery left and a '0' if below
@@ -110,8 +114,8 @@ int batteryStatus(String command){
     // the String::format("%f.2") part gives us a string to publish,
     // but with only 2 decimal points to save space
     Particle.publish("B",
-          "v:" + String::format("%f.2",fuel.getVCell()) +
-          ",c:" + String::format("%f.2",fuel.getSoC()),
+          "v:" + String::format("%.2f",fuel.getVCell()) +
+          ",c:" + String::format("%.2f",fuel.getSoC()),
           60, PRIVATE
     );
     // if there's more than 10% of the battery left, then return 1
