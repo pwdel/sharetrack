@@ -42,6 +42,7 @@ void setup() {
 
     // Subscribe to the integration response event
     Particle.subscribe("hook-response/gps-coordinates", myHandler, MY_DEVICES);
+    Particle.subscribe("hook-response/danielawspush", myHandler, MY_DEVICES);
     // These three functions are useful for remote diagnostics. Read more below.
     Particle.function("tmode", transmitMode);
     Particle.function("batt", batteryStatus);
@@ -72,6 +73,7 @@ void loop() {
             if(transmittingData){
                 // Short publish names save data!
                 Particle.publish("gps-coordinates", t.readLatLon(), 60, PRIVATE);
+                Particle.publish("danielawspush", t.readLatLon(), 60, PRIVATE);
             }
             // but always report the data over serial for local development
             Serial.println(t.readLatLon());
