@@ -9,7 +9,9 @@ print('Loading function')
 def get_current_user(): 
     return 12
 
-def push_location(dynamo, lat, lon, test_mode):
+def push_location(dynamo, gps_coords, ignore, test_mode):
+    lat = gps_coords.split(',')[0]
+    lon = gps_coords.split(',')[1]
     if test_mode=='true': 
         return "{'status': 'success'}"
     else:
@@ -22,12 +24,14 @@ def push_location(dynamo, lat, lon, test_mode):
 def get_location_history(dynamo, test_mode):
     values = dynamo.scan(FilterExpression=Attr('test_mode').eq(int(test_mode)))
     #return values
+    coords = [( x["time"], x["lat"], x["lon"]) for x in values["Items"]]
+    coords.sort(key=lambda x: x[0])
     return {
             "type": "Feature",
             "properties": {},
             "geometry": {
                 "type": "LineString",
-                "coordinates": [[x["lon"], x["lat"]] for x in values["Items"]]
+                "coordinates": [[x[2], x[1]] for x in coords]
         }}
 
 def lambda_handler(event, context):
@@ -48,3 +52,4 @@ def lambda_handler(event, context):
         pass
     elif query_string['operation'] == 'acquire':
         pass
+    
