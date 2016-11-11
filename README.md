@@ -3,7 +3,10 @@ Share Tracking Demo for Kenya, Minnesota &amp; Sweden, Using Particle Asset Trac
 
 # Background
 
-Better Transportation infrastructure in developing countries improves the efficiency and speed of the transfer of goods and people while reducing the unit cost which favors growth of the country.  Developing countries such as Kenya suffer from poor infrastructure, particularly highway infrastructure, and institutional finance problems which prevent roadway infrastructure from being significantly improved in a short time period.
+Better Transportation infrastructure in developing countries improves the efficiency and speed of the transfer of goods and people while reducing the unit cost which favors growth of the country.  Poor infrastructure, particularly highway and road infrastructure, as well as institutional finance problems mean that roads in developing countries will continue to be risky, which also entails that the insurance industries and overall economies will not grow at their full potential rate.  
+
+Being able to track assets such as trucks, cargo bicycles or other transportation methods via a cellular-data monitoring GPS asset trackers opens up an entire world of possibilities for economic growth.  Apps and visualizations can be built using this technology which decrease risks of purchasing, using and renting transportation assets.  Much as increased mobile phone penetration increases productivity[1], internet-connected devices can do the same.
+
 
 ## Transportation Issues & Opportunities
 
@@ -75,4 +78,6 @@ Mapbox
 https://www.mapbox.com 
 
 
+## Reference ##
 
+[1] http://www.gsma.com/publicpolicy/wp-content/uploads/2012/11/gsma-deloitte-impact-mobile-telephony-economic-growth.pdf
