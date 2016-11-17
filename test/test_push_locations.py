@@ -1,7 +1,9 @@
 
 import urllib3, random, time
 coord = [-93.2650, 44.9778];
-baseUrl = "https://f5v4mh3e3d.execute-api.us-east-1.amazonaws.com/prod/tracker2";
+
+baseUrl = "https://5fitl01xw0.execute-api.us-west-2.amazonaws.com/prod/gps-pull";
+# baseUrl = "https://f5v4mh3e3d.execute-api.us-east-1.amazonaws.com/prod/tracker2";
 
 http = urllib3.PoolManager();
 

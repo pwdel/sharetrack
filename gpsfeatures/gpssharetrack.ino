@@ -7,7 +7,7 @@ reading the battery level, and manually requesting a GPS reading.
 ---------------------------------------------------------------*/
 
 // Getting the library
-#include "AssetTracker/AssetTracker.h"
+#include "AssetTracker.h"
 
 // Set whether you want the device to publish data to the internet by default here.
 // 1 will Particle.publish AND Serial.print, 0 will just Serial.print
@@ -19,7 +19,7 @@ int transmittingData = 1;
 long lastPublish = 0;
 
 // How many minutes between publishes? 10+ recommended for long-time continuous publishing!
-int delayMinutes = 10;
+int delayMinutes = 1;
 
 // Creating an AssetTracker named 't' for us to reference
 AssetTracker t = AssetTracker();
@@ -40,13 +40,14 @@ void setup() {
     // Opens up a Serial port so you can listen over USB
     Serial.begin(9600);
 
-    // Subscribe to the integration response event
-    Particle.subscribe("hook-response/gps-coordinates", myHandler, MY_DEVICES);
-    Particle.subscribe("hook-response/danielawspush", myHandler, MY_DEVICES);
     // These three functions are useful for remote diagnostics. Read more below.
     Particle.function("tmode", transmitMode);
     Particle.function("batt", batteryStatus);
     Particle.function("gps", gpsPublish);
+
+    // Subscribe to the integration response event
+    Particle.subscribe("hook-response/gps-coordinates", myHandler, MY_DEVICES);
+
 }
 
 // loop() runs continuously
@@ -73,7 +74,6 @@ void loop() {
             if(transmittingData){
                 // Short publish names save data!
                 Particle.publish("gps-coordinates", t.readLatLon(), 60, PRIVATE);
-                Particle.publish("danielawspush", t.readLatLon(), 60, PRIVATE);
             }
             // but always report the data over serial for local development
             Serial.println(t.readLatLon());
@@ -89,6 +89,10 @@ int transmitMode(String command){
     return 1;
 }
 
+void myHandler(const char *event, const char *data) {
+  // Handle the integration response
+}
+
 // Actively ask for a GPS reading if you're impatient. Only publishes if there's
 // a GPS fix, otherwise returns '0'
 int gpsPublish(String command){
@@ -100,11 +104,6 @@ int gpsPublish(String command){
         return 1;
     }
     else { return 0; }
-}
-
-
-void myHandler(const char *event, const char *data) {
-  // Handle the integration response
 }
 
 // Lets you remotely check the battery status by calling the function "batt"

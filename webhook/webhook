@@ -1,0 +1,27 @@
+# Name
+
+gps-coordinates
+
+# Endpoint Trigger
+
+https://5fitl01xw0.execute-api.us-west-2.amazonaws.com/prod/gps-pull
+
+
+# Request Type
+
+GET
+
+# Device
+
+Any Device
+
+
+# Query Parameters
+
+{
+"operation": "push_location",
+"testMode": "1",
+"time": "{{PARTICLE_PUBLISHED_AT}}",
+"lat": "{{PARTICLE_EVENT_VALUE}}",
+"lon": "0"
+}

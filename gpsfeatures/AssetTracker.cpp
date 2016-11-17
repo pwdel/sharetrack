@@ -14,13 +14,13 @@ AssetTracker::AssetTracker(){
 
 void AssetTracker::begin(){
     accel.begin(LIS3DH_DEFAULT_ADDRESS);
-
+    
     // Default to 5kHz low-power sampling
     accel.setDataRate(LIS3DH_DATARATE_LOWPOWER_5KHZ);
-
+    
     // Default to 4 gravities range
     accel.setRange(LIS3DH_RANGE_4_G);
-
+    
     // Turn on the GPS module
     // gpsOn();
 }
@@ -47,7 +47,7 @@ void AssetTracker::gpsOn(){
     delay(500);
     // Default is 1 Hz update rate
     gps.sendCommand(PMTK_SET_NMEA_UPDATE_1HZ);
-    delay(500);
+    delay(500);    
     gps.sendCommand(PGCMD_NOANTENNA);
     delay(500);
 }
@@ -80,10 +80,10 @@ void AssetTracker::updateGPS(){
       // if a sentence is received, we can check the checksum, parse it...
   if (gps.newNMEAreceived()) {
     // a tricky thing here is if we print the NMEA sentence, or data
-    // we end up not listening and catching other sentences!
+    // we end up not listening and catching other sentences! 
     // so be very wary if using OUTPUT_ALLDATA and trytng to print out data
     //Serial.println(gps.lastNMEA());   // this also sets the newNMEAreceived() flag to false
-
+  
     if (!gps.parse(gps.lastNMEA()))   {
       // this also sets the newNMEAreceived() flag to false
       return;  // we can fail to parse a sentence in which case we should just wait for another
@@ -161,8 +161,8 @@ boolean Adafruit_GPS::parse(char *nmea) {
   if (nmea[strlen(nmea)-4] == '*') {
     uint16_t sum = parseHex(nmea[strlen(nmea)-3]) * 16;
     sum += parseHex(nmea[strlen(nmea)-2]);
-
-    // check checksum
+    
+    // check checksum 
     for (uint8_t i=2; i < (strlen(nmea)-4); i++) {
       sum ^= nmea[i];
     }
@@ -206,7 +206,7 @@ boolean Adafruit_GPS::parse(char *nmea) {
       latitudeDegrees = (latitude-100*int(latitude/100))/60.0;
       latitudeDegrees += int(latitude/100);
     }
-
+    
     p = strchr(p, ',')+1;
     if (',' != *p)
     {
@@ -216,7 +216,7 @@ boolean Adafruit_GPS::parse(char *nmea) {
       else if (p[0] == ',') lat = 0;
       else return false;
     }
-
+    
     // parse out longitude
     p = strchr(p, ',')+1;
     if (',' != *p)
@@ -235,7 +235,7 @@ boolean Adafruit_GPS::parse(char *nmea) {
       longitudeDegrees = (longitude-100*int(longitude/100))/60.0;
       longitudeDegrees += int(longitude/100);
     }
-
+    
     p = strchr(p, ',')+1;
     if (',' != *p)
     {
@@ -245,31 +245,31 @@ boolean Adafruit_GPS::parse(char *nmea) {
       else if (p[0] == ',') lon = 0;
       else return false;
     }
-
+    
     p = strchr(p, ',')+1;
     if (',' != *p)
     {
       fixquality = atoi(p);
     }
-
+    
     p = strchr(p, ',')+1;
     if (',' != *p)
     {
       satellites = atoi(p);
     }
-
+    
     p = strchr(p, ',')+1;
     if (',' != *p)
     {
       HDOP = atof(p);
     }
-
+    
     p = strchr(p, ',')+1;
     if (',' != *p)
     {
       altitude = atof(p);
     }
-
+    
     p = strchr(p, ',')+1;
     p = strchr(p, ',')+1;
     if (',' != *p)
@@ -294,7 +294,7 @@ boolean Adafruit_GPS::parse(char *nmea) {
 
     p = strchr(p, ',')+1;
     // Serial.println(p);
-    if (p[0] == 'A')
+    if (p[0] == 'A') 
       fix = true;
     else if (p[0] == 'V')
       fix = false;
@@ -319,7 +319,7 @@ boolean Adafruit_GPS::parse(char *nmea) {
       latitudeDegrees = (latitude-100*int(latitude/100))/60.0;
       latitudeDegrees += int(latitude/100);
     }
-
+    
     p = strchr(p, ',')+1;
     if (',' != *p)
     {
@@ -329,7 +329,7 @@ boolean Adafruit_GPS::parse(char *nmea) {
       else if (p[0] == ',') lat = 0;
       else return false;
     }
-
+    
     // parse out longitude
     p = strchr(p, ',')+1;
     if (',' != *p)
@@ -348,7 +348,7 @@ boolean Adafruit_GPS::parse(char *nmea) {
       longitudeDegrees = (longitude-100*int(longitude/100))/60.0;
       longitudeDegrees += int(longitude/100);
     }
-
+    
     p = strchr(p, ',')+1;
     if (',' != *p)
     {
@@ -364,14 +364,14 @@ boolean Adafruit_GPS::parse(char *nmea) {
     {
       speed = atof(p);
     }
-
+    
     // angle
     p = strchr(p, ',')+1;
     if (',' != *p)
     {
       angle = atof(p);
     }
-
+    
     p = strchr(p, ',')+1;
     if (',' != *p)
     {
@@ -389,14 +389,14 @@ boolean Adafruit_GPS::parse(char *nmea) {
 
 char Adafruit_GPS::read(void) {
   char c = 0;
-
+  
   if (paused) return c;
 
 #ifdef __AVR__
   if(gpsSwSerial) {
     if(!gpsSwSerial->available()) return c;
     c = gpsSwSerial->read();
-  } else
+  } else 
 #endif
   {
     if(!Serial1.available()) return c;
@@ -439,7 +439,7 @@ char Adafruit_GPS::read(void) {
 #if ARDUINO >= 100
 Adafruit_GPS::Adafruit_GPS(SoftwareSerial *ser)
 #else
-Adafruit_GPS::Adafruit_GPS(NewSoftSerial *ser)
+Adafruit_GPS::Adafruit_GPS(NewSoftSerial *ser) 
 #endif
 {
   common_init();     // Set everything to common state, then...
@@ -477,9 +477,9 @@ void Adafruit_GPS::common_init(void) {
 void Adafruit_GPS::begin(uint16_t baud)
 {
 #ifdef __AVR__
-  if(gpsSwSerial)
+  if(gpsSwSerial) 
     gpsSwSerial->begin(baud);
-  else
+  else 
     Serial1.begin(baud);
 #endif
   Serial1.begin(baud);
@@ -488,9 +488,9 @@ void Adafruit_GPS::begin(uint16_t baud)
 
 void Adafruit_GPS::sendCommand(const char *str) {
 #ifdef __AVR__
-  if(gpsSwSerial)
+  if(gpsSwSerial) 
     gpsSwSerial->println(str);
-  else
+  else    
 #endif
     Serial1.println(str);
 }
@@ -527,7 +527,7 @@ boolean Adafruit_GPS::waitForSentence(const char *wait4me, uint8_t max) {
 
   uint8_t i=0;
   while (i < max) {
-    if (newNMEAreceived()) {
+    if (newNMEAreceived()) { 
       char *nmea = lastNMEA();
       strncpy(str, nmea, 20);
       str[19] = 0;
@@ -555,23 +555,23 @@ boolean Adafruit_GPS::LOCUS_StopLogger(void) {
 
 boolean Adafruit_GPS::LOCUS_ReadStatus(void) {
   sendCommand(PMTK_LOCUS_QUERY_STATUS);
-
+  
   if (! waitForSentence("$PMTKLOG"))
     return false;
 
   char *response = lastNMEA();
   uint16_t parsed[10];
   uint8_t i;
-
+  
   for (i=0; i<10; i++) parsed[i] = -1;
-
+  
   response = strchr(response, ',');
   for (i=0; i<10; i++) {
-    if (!response || (response[0] == 0) || (response[0] == '*'))
+    if (!response || (response[0] == 0) || (response[0] == '*')) 
       break;
     response++;
     parsed[i]=0;
-    while ((response[0] != ',') &&
+    while ((response[0] != ',') && 
 	   (response[0] != '*') && (response[0] != 0)) {
       parsed[i] *= 10;
       char c = response[0];
@@ -585,7 +585,7 @@ boolean Adafruit_GPS::LOCUS_ReadStatus(void) {
   LOCUS_serial = parsed[0];
   LOCUS_type = parsed[1];
   if (isAlpha(parsed[2])) {
-    parsed[2] = parsed[2] - 'a' + 10;
+    parsed[2] = parsed[2] - 'a' + 10; 
   }
   LOCUS_mode = parsed[2];
   LOCUS_config = parsed[3];
@@ -658,17 +658,17 @@ boolean Adafruit_GPS::wakeup(void) {
 */
 /**************************************************************************/
 // I2C
-Adafruit_LIS3DH::Adafruit_LIS3DH()
+Adafruit_LIS3DH::Adafruit_LIS3DH() 
   : _cs(-1), _mosi(-1), _miso(-1), _sck(-1), _sensorID(-1)
 {
 }
 
-Adafruit_LIS3DH::Adafruit_LIS3DH(int8_t cspin)
-  : _cs(cspin), _mosi(-1), _miso(-1), _sck(-1), _sensorID(-1)
+Adafruit_LIS3DH::Adafruit_LIS3DH(int8_t cspin) 
+  : _cs(cspin), _mosi(-1), _miso(-1), _sck(-1), _sensorID(-1) 
 { }
 
-Adafruit_LIS3DH::Adafruit_LIS3DH(int8_t cspin, int8_t mosipin, int8_t misopin, int8_t sckpin)
-  : _cs(cspin), _mosi(mosipin), _miso(misopin), _sck(sckpin), _sensorID(-1)
+Adafruit_LIS3DH::Adafruit_LIS3DH(int8_t cspin, int8_t mosipin, int8_t misopin, int8_t sckpin) 
+  : _cs(cspin), _mosi(mosipin), _miso(misopin), _sck(sckpin), _sensorID(-1) 
 { }
 
 
@@ -680,7 +680,7 @@ Adafruit_LIS3DH::Adafruit_LIS3DH(int8_t cspin, int8_t mosipin, int8_t misopin, i
 /**************************************************************************/
 bool Adafruit_LIS3DH::begin(uint8_t i2caddr) {
   _i2caddr = i2caddr;
-
+  
 
   if (_cs == -1) {
     // i2c
@@ -725,14 +725,14 @@ bool Adafruit_LIS3DH::begin(uint8_t i2caddr) {
 
   // enable adc & temp sensor
   writeRegister8(LIS3DH_REG_TEMPCFG, 0xC0);
-
-
+  
+  
   for (uint8_t i=0; i<0x30; i++) {
     Serial.print("$");
     Serial.print(i, HEX); Serial.print(" = 0x");
     Serial.println(readRegister8(i), HEX);
   }
-
+  
 
   return true;
 }
@@ -746,7 +746,7 @@ void Adafruit_LIS3DH::read(void) {
     Wire.beginTransmission(_i2caddr);
     Wire.write(LIS3DH_REG_OUT_X_L | 0x80); // 0x80 for autoincrement
     Wire.endTransmission();
-
+    
     Wire.requestFrom(_i2caddr, 6);
     x = Wire.read(); x |= ((uint16_t)Wire.read()) << 8;
     y = Wire.read(); y |= ((uint16_t)Wire.read()) << 8;
@@ -799,7 +799,7 @@ uint16_t Adafruit_LIS3DH::readADC(uint8_t adc) {
     // i2c
     Wire.beginTransmission(_i2caddr);
     Wire.write(reg | 0x80);   // 0x80 for autoincrement
-    Wire.endTransmission();
+    Wire.endTransmission();    
     Wire.requestFrom(_i2caddr, 2);
     value = Wire.read();  value |= ((uint16_t)Wire.read()) << 8;
   } else {
@@ -867,7 +867,7 @@ lis3dh_dataRate_t Adafruit_LIS3DH::getDataRate(void)
 }
 
 /**************************************************************************/
-/*!
+/*! 
     @brief  Gets the most recent sensor event
 */
 /**************************************************************************/
@@ -888,7 +888,7 @@ bool Adafruit_LIS3DH::getEvent(sensors_event_t *event) {
 }
 
 /**************************************************************************/
-/*!
+/*! 
     @brief  Gets the sensor_t data
 */
 /**************************************************************************/
@@ -903,9 +903,9 @@ void Adafruit_LIS3DH::getSensor(sensor_t *sensor) {
   sensor->sensor_id   = _sensorID;
   sensor->type        = SENSOR_TYPE_ACCELEROMETER;
   sensor->min_delay   = 0;
-  sensor->max_value   = 0;
+  sensor->max_value   = 0;             
   sensor->min_value   = 0;
-  sensor->resolution  = 0;
+  sensor->resolution  = 0;             
 }
 
 /**************************************************************************/
@@ -995,15 +995,15 @@ uint8_t Adafruit_LIS3DH::clearInterrupt() {
 
 
 /**************************************************************************/
-/*!
+/*! 
     @brief  Low level SPI
 */
 /**************************************************************************/
 
 uint8_t Adafruit_LIS3DH::spixfer(uint8_t x) {
-  if (_sck == -1)
+  if (_sck == -1) 
     return SPI.transfer(x);
-
+  
   // software spi
   //Serial.println("Software SPI");
   uint8_t reply = 0;
@@ -1012,7 +1012,7 @@ uint8_t Adafruit_LIS3DH::spixfer(uint8_t x) {
     digitalWrite(_sck, LOW);
     digitalWrite(_mosi, x & (1<<i));
     digitalWrite(_sck, HIGH);
-    if (digitalRead(_miso))
+    if (digitalRead(_miso)) 
       reply |= 1;
   }
   return reply;
@@ -1050,7 +1050,7 @@ void Adafruit_LIS3DH::writeRegister8(uint8_t reg, uint8_t value) {
 /**************************************************************************/
 uint8_t Adafruit_LIS3DH::readRegister8(uint8_t reg) {
   uint8_t value;
-
+  
   if (_cs == -1) {
     Wire.beginTransmission(_i2caddr);
     Wire.write((uint8_t)reg);
@@ -1081,3 +1081,5 @@ void Adafruit_LIS3DH::beginTransaction() {
 
 void Adafruit_LIS3DH::endTransaction() {
 }
+
+
